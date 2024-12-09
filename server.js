@@ -33,8 +33,7 @@ function broadcastToClients(data) {
     });
 }
 
-app.get('/data', (req, res) => {
-    return "<div>asd<div/>";
+app.get('/api/data', (req, res) => {
     fs.readFile(FILE_PATH, (err, fileData) => {
         if (err) {
             res.status(500).json({ error: 'Error reading data file' });
@@ -45,7 +44,7 @@ app.get('/data', (req, res) => {
     });
 });
 
-app.post('/submit', (req, res) => {
+app.post('/api/submit', (req, res) => {
     const newItem = req.body;
 
     fs.readFile(FILE_PATH, (err, fileData) => {
@@ -67,7 +66,7 @@ app.post('/submit', (req, res) => {
     });
 });
 
-app.delete('/data/delete', (req, res) => {
+app.delete('/api/data/delete', (req, res) => {
     try {
         fs.writeFile(FILE_PATH, '[]', (err) => {
             if (err) {
