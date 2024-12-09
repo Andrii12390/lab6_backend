@@ -6,12 +6,24 @@ const { WebSocketServer } = require('ws');
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: '*', // Дозволяє запити з будь-якого домену
+    methods: 'GET,POST,DELETE',
+    allowedHeaders: 'Content-Type',
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const FILE_PATH = './data.json';
 
-const wss = new WebSocketServer({ port: 8080 });
+// Запуск сервера HTTP
+const server = app.listen(process.env.PORT || 3000, () => {
+    console.log(`HTTP Server is running on http://localhost:${server.address().port}`);
+});
+
+// Ініціалізація WebSocket сервера
+const wss = new WebSocketServer({ server });
 
 function broadcastToClients(data) {
     wss.clients.forEach(client => {
@@ -69,10 +81,4 @@ app.delete('/data/delete', (req, res) => {
         console.error('Unexpected error:', error);
         res.status(500).json({ error: 'Error deleting data' });
     }
-});
-
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`HTTP Server is running on http://localhost:${PORT}`);
 });
