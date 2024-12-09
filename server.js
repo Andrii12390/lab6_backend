@@ -9,7 +9,7 @@ const app = express();
 const corsOptions = {
     origin: '*', // Дозволяє запити з будь-якого домену
     methods: 'GET,POST,DELETE',
-    allowedHeaders: 'Content-Type',
+    allowedHeaders: '*', // Дозволяє всі заголовки
 };
 
 app.use(cors(corsOptions));
@@ -19,7 +19,7 @@ const FILE_PATH = './data.json';
 
 // Запуск сервера HTTP
 const server = app.listen(process.env.PORT || 3000, () => {
-    console.log(`HTTP Server is running on http://localhost:${server.address().port}`);
+    console.log(`HTTP Server is running on ${process.env.PORT ? 'Vercel' : 'http://localhost'}:${server.address().port}`);
 });
 
 // Ініціалізація WebSocket сервера
@@ -34,6 +34,7 @@ function broadcastToClients(data) {
 }
 
 app.get('/data', (req, res) => {
+    return "<div>asd<div/>";
     fs.readFile(FILE_PATH, (err, fileData) => {
         if (err) {
             res.status(500).json({ error: 'Error reading data file' });
