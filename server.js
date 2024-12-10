@@ -71,11 +71,15 @@ async function run() {
     });
 
     const server = app.listen(process.env.PORT || 3000, () => {
-        console.log(`HTTP Server is running on ${process.env.PORT ? 'Vercel' : 'http://localhost'}:${server.address().port}`);
+        const address = server.address();
+        const host = process.env.VERCEL_URL || 'localhost'; // Використовуємо VERCEL_URL, якщо доступний
+        const wsUrl = `wss://${host}:${address.port}`;
+        console.log(`HTTP Server is running on ${process.env.PORT ? 'Vercel' : 'http://localhost'}:${address.port}`);
+        console.log(`WebSocket Server is running at ${wsUrl}`);
     });
-
+    
     const wss = new WebSocketServer({ server });
-
+    
     wss.on('connection', ws => {
         console.log('New WebSocket connection');
 
